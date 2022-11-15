@@ -1,0 +1,59 @@
+version: '3.9'
+services:
+
+  mariadb:
+    image: mariadb:${MARIADB_VERSION}
+    environment:
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - MARIADB_USER=${MARIADB_USERNAME}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+    volumes:
+      - ./mariadb/data:/var/lib/mysql
+    ports:
+      - ${MARIADB_PORT}:3306
+    working_dir: /modx
+
+  nginx:
+    image: nginx:${NGINX_VERSION}
+    environment:
+      - NGINX_PORT=${NGINX_PORT}
+    volumes:
+      - ./nginx:/etc/nginx/templates
+      - ./log/nginx:/var/log/nginx
+      - ../modx:/modx
+    ports:
+      - ${NGINX_PORT}:80
+    depends_on:
+      - php-fpm
+      - mariadb
+    working_dir: /modx
+
+  php-fpm:
+    build:
+      context: ./php-fpm
+      args:
+        - PHP_VERSION
+    volumes:
+      - ./php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./log/php-fpm:/var/log/php
+      - ../modx:/modx
+    cap_add:
+      - SYS_PTRACE
+    depends_on:
+      - mariadb
+    environment:
+      PHP_IDE_CONFIG: "serverName=ModxDocker"
+    working_dir: /modx
+
+  node:
+    image: node:${NODE_VERSION}-alpine
+    volumes:
+      - ../assets:/assets
+      - ../modx:/modx
+    ports:
+      - ${NODE_DEV_PORT}:9000
+    depends_on:
+      - nginx
+    working_dir: /assets
+    command: sh -c "yarn && yarn dev"

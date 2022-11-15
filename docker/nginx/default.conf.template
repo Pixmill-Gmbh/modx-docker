@@ -1,0 +1,33 @@
+server {
+    listen 80 default;
+    listen ${NGINX_PORT};
+    charset utf-8;
+    index index.php;
+    root /modx/;
+
+    location @rewrite {
+        rewrite ^/(.*)$ /index.php?q=$1;
+    }
+
+    location ~ \.php$ {
+        try_files $uri $uri/ @rewrite;
+
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_pass php-fpm:9000;
+    }
+
+    location / {
+        try_files $uri $uri/ @rewrite;
+    }
+
+    location ~* ^.+\.(jpg|jpeg|gif|css|png|js|ico|bmp|ttf|woff|woff2|svg)$ {
+        access_log off;
+        expires 10d;
+        break;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
