@@ -12,6 +12,7 @@ git clone https://github.com/bezumkin/modx-docker.git ./NewProject
 If you have no Docker, please install it with
 ```
 brew install docker --cask
+brew install docker-compose
 ```
 Then launch Docker desktop application from Applications.
 
