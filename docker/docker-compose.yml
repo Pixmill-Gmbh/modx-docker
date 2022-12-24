@@ -37,6 +37,7 @@ services:
     volumes:
       - ./php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - ./log/php-fpm:/var/log/php
+      - ./.env:/modx/.env
       - ../modx:/modx
     cap_add:
       - SYS_PTRACE

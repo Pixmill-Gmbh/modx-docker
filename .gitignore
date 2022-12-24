@@ -10,6 +10,7 @@
 /docker/log
 /docker/mariadb/data
 
+/modx/.env
 /modx/assets
 /modx/connectors
 /modx/core

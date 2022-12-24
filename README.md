@@ -74,3 +74,28 @@ If you want to upload compiled assets to production web-server, run
 This should compile frontend bundle and copy PHP sources with Gitify data files to the root `/dist` directory.
 
 Now you are ready to upload the content of `/dist` directory to the root of MODX website on server.
+
+## Windows notice
+
+Although Docker works well on Windows, you can't run a bash script without installing WSL 2 or other complexities.
+
+That is why you will need to run it directly inside PHP container. Open Docker Desktop, click on context menu of 
+`php-fpm` container and use commands from scripts.
+
+For example, here is all-in-one commands to install MODX:
+```shell
+source ./.env
+
+gitify modx:download 2.8.4-pl
+
+php setup/cli-install.php --database_server=mariadb \
+  --database=$MARIADB_DATABASE --database_user=$MARIADB_USERNAME --database_password=$MARIADB_PASSWORD \
+  --table_prefix=modx_ --language=en --cmsadmin=admin --cmspassword=adminadmin --cmsadminemail=admin@localhost \
+  --context_mgr_path=/modx/manager/ --context_mgr_url=/manager/ \
+  --context_connectors_path=/modx/connectors/ --context_connectors_url=/connectors/ \
+  --context_web_path=/modx/
+  
+rm -rf ./core/cache && gitify build
+
+gitify package:install --all
+```
