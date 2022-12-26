@@ -84,7 +84,7 @@ That is why you will need to run it directly inside PHP container. Open Docker D
 
 For example, here is all-in-one commands to install MODX:
 ```shell
-source ./.env
+export $(cat ./.env | sed 's/\r$//')
 
 gitify modx:download 2.8.4-pl
 
