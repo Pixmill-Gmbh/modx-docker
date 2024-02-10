@@ -2,8 +2,9 @@
 
 source "./.env"
 NAME=${COMPOSE_PROJECT_NAME}-php-fpm
+MODX=${MODX_VERSION}
 
-docker exec -ti $(docker ps --filter name=$NAME -q) bash -c "gitify modx:download 2.8.4-pl"
+docker exec -ti $(docker ps --filter name=$NAME -q) bash -c "gitify modx:download $MODX"
 
 docker exec -ti $(docker ps --filter name=$NAME -q) bash -c "php setup/cli-install.php --database_server=mariadb \
   --database=$MARIADB_DATABASE --database_user=$MARIADB_USERNAME --database_password=$MARIADB_PASSWORD \
