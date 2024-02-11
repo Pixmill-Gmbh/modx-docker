@@ -42,7 +42,24 @@ If you have run this project for the first time, you need to install MODX with d
 ./modx-install.sh
 ```
 
-This will install MODX `2.8.4-pl`, default packages and create special `Assets` plugin. 
+This will install MODX of the version specified in `MODX_VERSION` variable, default packages and create special `Assets` plugin.
+
+### MODX 2.8.5+ notice
+
+There is a problem in MODX 2.8.5+ versions because of [this PR](https://github.com/modxcms/revolution/pull/16201). 
+If you installed this version, you need go to the `core/config/config.inc.php` and change the line `66` to make port checking not so strict.
+
+Before
+```
+if ($_SERVER['SERVER_PORT'] !== 80) {
+```
+
+After
+```
+if ($_SERVER['SERVER_PORT'] != 80) {
+```
+
+This will solve the problem with wrong addresses.
 
 ### How to develop
 
