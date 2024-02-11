@@ -10,19 +10,27 @@ if ($modx->event->name !== 'OnBeforeRegisterClientScripts') {
     return;
 }
 
-$assetsUrl = MODX_ASSETS_URL . 'app/';
-$manifest = MODX_ASSETS_PATH . 'app/manifest.json';
-if (!file_exists($manifest)) {
-    return;
-}
-if (!$files = json_decode(file_get_contents($manifest), true)) {
-    return;
-}
-
-foreach ($files as $file) {
-    if (preg_match('#\.css$#', $file)) {
-        $modx->regClientCss($assetsUrl . $file);
-    } elseif (preg_match('#\.js$#', $file)) {
-        $modx->regClientScript($assetsUrl . $file);
+$baseUrl = MODX_ASSETS_URL . 'app/';
+$port = '9090';
+$connection = @fsockopen('node', $port);
+if (is_resource($connection)) {
+    // Development mode
+    $server = explode(':', MODX_HTTP_HOST);
+    $vite = MODX_URL_SCHEME . $server[0] . ':' . $port . $baseUrl;
+    $modx->regClientHTMLBlock('<script type="module" src="' . $vite . '@vite/client"></script>');
+    $modx->regClientHTMLBlock('<script type="module" src="' . $vite . 'src/index.js"></script>');
+} else {
+    // Production mode
+    $manifest = MODX_ASSETS_PATH . 'app/.vite/manifest.json';
+    if (file_exists($manifest) && $files = json_decode(file_get_contents($manifest), true)) {
+        if (!empty($files['src/index.js'])) {
+            $file = $files['src/index.js'];
+            $modx->regClientScript($baseUrl . $file['file']);
+            if (!empty($file['css'])) {
+                foreach($file['css'] as $css) {
+                    $modx->regClientCss($baseUrl . $css);
+                }
+            }
+        }
     }
 }

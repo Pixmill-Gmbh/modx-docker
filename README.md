@@ -65,7 +65,7 @@ This will solve the problem with wrong addresses.
 
 Open http://127.0.0.1:8080 - you will see the MODX website. 
 
-Your frontend assets are in the `NewProject/assets` directory, handled by Webpack in development mode. 
+Your frontend assets are in the `NewProject/assets` directory, handled by Vite in development mode. 
 When you change files, frontend will rebuild assets and reload. 
 
 If you want to change something in MODX, feel free to go to the `/manager` using login `admin` and password `adminadmin`.
