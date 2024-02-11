@@ -72,7 +72,7 @@ If you want to change something in MODX, feel free to go to the `/manager` using
 
 When you finish your work, run 
 ```
-./modx-extract.sh
+./modx-backup.sh
 ```
 to save your changes for Git.
 
