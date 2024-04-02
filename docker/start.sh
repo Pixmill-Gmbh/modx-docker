@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Foreground mode
-# docker-compose up --build
+# docker compose up --build
 
 # Background mode
-docker-compose up --build --detach
+docker compose up --build --detach

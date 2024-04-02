@@ -11,14 +11,14 @@ CON_ID=$(docker ps --filter name=$NAME -q)
 rm -rf ../dist
 
 if [ ! $CON_ID ]; then
-  docker-compose -p ${COMPOSE_PROJECT_NAME} start mariadb php-fpm
+  docker compose -p ${COMPOSE_PROJECT_NAME} start mariadb php-fpm
   sleep 5
 fi
 
 ./modx-backup.sh
 
 if [ ! $CON_ID ]; then
-  docker-compose -p ${COMPOSE_PROJECT_NAME} stop mariadb php-fpm
+  docker compose -p ${COMPOSE_PROJECT_NAME} stop mariadb php-fpm
 fi
 
 mkdir -p ../dist/assets/app
